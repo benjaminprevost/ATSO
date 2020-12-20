@@ -1,0 +1,8 @@
+OPENSENSEMAP_EMAIL=toto@exemp.le
+OPENSENSEMAP_PASSWORD=XXX
+SMTP_USER=toto@exemp.le
+SMTP_PASSWORD=XXX
+SMTP_SERVER=smtp.gmail.com
+TO=toto@exemp.le,tata@exemp.le
+
+*/5 * * * * $HOME/venv/bin/python $HOME/main.py
