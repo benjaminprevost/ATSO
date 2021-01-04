@@ -1,0 +1,28 @@
+version: '3.7'
+services:
+  database:
+    image: "postgres:11"
+    env_file:
+      - database.env
+    volumes:
+      - database-data:/var/lib/postgresql/data/
+#  app:
+#    build: ./services/web
+#    command: python manage.py run -h 0.0.0.0
+#    volumes:
+#      - ./services/web/:/usr/src/app/
+#    ports:
+#      - 5000:5000
+#    env_file:
+#      - ./.env.dev
+#    depends_on:
+#      - database
+  grafana:
+    image: "grafana/grafana:7.3.6"
+    volumes:
+      - grafana-data:/var/lib/grafana
+    links:
+      - database
+volumes:
+  database-data:
+  grafana-data:
