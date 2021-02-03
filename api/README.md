@@ -3,46 +3,44 @@ curl				install
 
 ## Usage
 
+Lancer la stack
+```
 docker-compose up -d
+```
 
+Obtenir l'IP de la base de donnée
+```
+docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' api_database_1
+```
 
-docker-compose run database bash
-psql --host=database --username=unicorn_user --dbname=rainbow_database
-
-rainbow_database=# SELECT * FROM color_table; -- verify record does not already exist
-
-
-
-
-docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' container_name_or_id
-
-
-
-data.csv
-
-datetime, temp, pression, humidité, dbm, wifi
-
-
+Connexion à la db
+```
+psql --host=172.18.0.2 --username=user --dbname=database
+```
 
 ```sql
 CREATE TABLE bme280
-(datetime CHAR(255),
-temp CHAR(255),
-pression CHAR(255),
-humidite CHAR(255),
-dbm CHAR(255),
-wifi CHAR(255));
+(id SERIAL PRIMARY KEY,
+datetime TIMESTAMP,
+temp DOUBLE PRECISION,
+pression DOUBLE PRECISION,
+humidite DOUBLE PRECISION,
+dbm DOUBLE PRECISION,
+wifi DOUBLE PRECISION);
 ```
 
-Local copy
-```SQL
-COPY zip_codes FROM '/path/to/csv/ZIP_CODES.txt' WITH (FORMAT csv);
+Copie à partir de l'hôte
 ```
-
-Remote copy
-
-psql --host=172.18.0.2 --username=unicorn_user --dbname=rainbow_database -c \
+psql --host=172.18.0.2 --username=user --dbname=database -c \
 "copy bme280 (datetime, temp, pression, humidite, dbm, wifi) from STDIN with delimiter as ';'" < data.csv
+```
 
+Copie local (Si l'échantillon est monté dans le conteneur)
+```SQL
+COPY bme280 FROM '/path/to/csv/data.csv' WITH (FORMAT csv);
+```
 
-csv
+Structure de l'échantillon `data.csv`
+```
+datetime, temp, pression, humidité, dbm, wifi
+```
