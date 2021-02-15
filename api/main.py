@@ -20,7 +20,7 @@ def sensoravg():
     r = requests.get(apiOpenSenseMap + 'users/me/boxes', headers=head)
 
     sensors = r.json()['data']['boxes']
-
+    
     Measure = {"h": [], "l": []}
 
     for sensor in sensors:
@@ -28,9 +28,15 @@ def sensoravg():
             for item in sensor['sensors']:
                 if item['sensorType'] == "SDS 011" and 'lastMeasurement' in item.keys():
                     if item['title'] == "PM10":
-                        Measure['h'].append(float(item['lastMeasurement']['value']))
+                        try:
+                            Measure['h'].append(float(item['lastMeasurement']['value']))
+                        except:
+                            pass
                     elif item['title'] == "PM2.5":
-                        Measure['l'].append(float(item['lastMeasurement']['value']))
+                        try:
+                            Measure['l'].append(float(item['lastMeasurement']['value']))
+                        except:
+                            pass
 
     avg = {'avgL': sum(Measure['l'])/len(Measure['l']), 'avgH': sum(Measure['h'])/len(Measure['h'])}
 
